@@ -236,7 +236,6 @@ const instructors = [
 const students = [
   {
     id: '1',
-    courseId: '1',
     firstName: 'Okello',
     middleName: '',
     lastName: 'Moses',
@@ -256,6 +255,7 @@ const students = [
     githubUsername: 'Jokmonsimon',
     twitterUsername: 'afandeojok',
     linkedInURL: 'https://www.linkedin.com/in/ojok-simon-peter/',
+    courseId: '1',
   },
   {
     id: '2',
