@@ -1,4 +1,10 @@
-const { projects, instructors, students, courses } = require('../sampleData');
+// const { courses, projects, instructors, students } = require('../sampleData');
+
+// Mongoose Models
+const Course = require('../models/Course');
+const Project = require('../models/Project');
+const Instructor = require('../models/Instructor');
+const Student = require('../models/Student');
 
 const {
   GraphQLObjectType,
@@ -20,7 +26,7 @@ const CourseType = new GraphQLObjectType({
     projectId: {
       type: ProjectType,
       resolve(parent, args) {
-        return projects.find((project) => project.id === parent.projectId);
+        return projects.findById(parent.projectId);
       },
     },
   }),
@@ -49,9 +55,7 @@ const ProjectType = new GraphQLObjectType({
     instructor: {
       type: InstructorType,
       resolve(parent, args) {
-        return instructors.find(
-          (instructor) => instructor.id === parent.instructorId
-        );
+        return instructors.findById(parent.instructorId);
       },
     },
   }),
@@ -103,7 +107,7 @@ const StudentType = new GraphQLObjectType({
     courseId: {
       type: CourseType,
       resolve(parent, args) {
-        return courses.find((course) => course.id === parent.courseId);
+        return courses.findById(parent.courseId);
       },
     },
   }),
@@ -117,7 +121,7 @@ const RootQuery = new GraphQLObjectType({
     courses: {
       type: new GraphQLList(CourseType),
       resolve(parent, args) {
-        return courses;
+        return Course.find();
       },
     },
 
@@ -126,7 +130,7 @@ const RootQuery = new GraphQLObjectType({
       type: CourseType,
       args: { id: { type: GraphQLID } },
       resolve(parent, args) {
-        return courses.find((course) => course.id === args.id);
+        return Course.findById(args.id);
       },
     },
 
@@ -134,7 +138,7 @@ const RootQuery = new GraphQLObjectType({
     projects: {
       type: new GraphQLList(ProjectType),
       resolve(parent, args) {
-        return projects;
+        return Project.find();
       },
     },
 
@@ -143,7 +147,7 @@ const RootQuery = new GraphQLObjectType({
       type: ProjectType,
       args: { id: { type: GraphQLID } },
       resolve(parent, args) {
-        return projects.find((project) => project.id === args.id);
+        return Project.findById(args.id);
       },
     },
 
@@ -151,7 +155,7 @@ const RootQuery = new GraphQLObjectType({
     instructors: {
       type: new GraphQLList(InstructorType),
       resolve(parent, args) {
-        return instructors;
+        return Instructor.find();
       },
     },
 
@@ -160,7 +164,7 @@ const RootQuery = new GraphQLObjectType({
       type: InstructorType,
       args: { id: { type: GraphQLID } },
       resolve(parent, args) {
-        return instructors.find((instructor) => instructor.id === args.id);
+        return Instructor.findById(args.id);
       },
     },
 
@@ -168,7 +172,7 @@ const RootQuery = new GraphQLObjectType({
     students: {
       type: new GraphQLList(StudentType),
       resolve(parent, args) {
-        return students;
+        return Student.find();
       },
     },
 
@@ -177,7 +181,7 @@ const RootQuery = new GraphQLObjectType({
       type: StudentType,
       args: { id: { type: GraphQLID } },
       resolve(parent, args) {
-        return students.find((student) => student.id === args.id);
+        return Student.findById(args.id);
       },
     },
   },
