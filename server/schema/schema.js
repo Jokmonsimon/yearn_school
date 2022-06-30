@@ -12,6 +12,8 @@ const {
   GraphQLString,
   GraphQLSchema,
   GraphQLList,
+  GraphQLNonNull,
+  GraphQLEnumType,
 } = require('graphql');
 
 // Course Type
@@ -23,12 +25,6 @@ const CourseType = new GraphQLObjectType({
     description: { type: GraphQLString },
     duration: { type: GraphQLString },
     status: { type: GraphQLString },
-    projectId: {
-      type: ProjectType,
-      resolve(parent, args) {
-        return projects.findById(parent.projectId);
-      },
-    },
   }),
 });
 
@@ -55,7 +51,7 @@ const ProjectType = new GraphQLObjectType({
     instructor: {
       type: InstructorType,
       resolve(parent, args) {
-        return instructors.findById(parent.instructorId);
+        return Instructor.findById(parent.instructorId);
       },
     },
   }),
@@ -89,6 +85,7 @@ const StudentType = new GraphQLObjectType({
     firstName: { type: GraphQLString },
     middleName: { type: GraphQLString },
     lastName: { type: GraphQLString },
+    gender: { type: GraphQLString },
     dateOfBirth: { type: GraphQLString },
     emmergencyContactName: { type: GraphQLString },
     emmergencyContactRelation: { type: GraphQLString },
@@ -107,13 +104,13 @@ const StudentType = new GraphQLObjectType({
     courseId: {
       type: CourseType,
       resolve(parent, args) {
-        return courses.findById(parent.courseId);
+        return Course.findById(parent.courseId);
       },
     },
   }),
 });
 
-// Make a Query
+// Make Queries
 const RootQuery = new GraphQLObjectType({
   name: 'RootQueryType',
   fields: {
@@ -187,4 +184,104 @@ const RootQuery = new GraphQLObjectType({
   },
 });
 
-module.exports = new GraphQLSchema({ query: RootQuery });
+// Mutations
+const mutation = new GraphQLObjectType({
+  name: 'Mutation',
+  fields: {
+    // Add Course
+    addCourse: {
+      type: CourseType,
+      args: {
+        name: { type: new GraphQLNonNull(GraphQLString) },
+        description: { type: new GraphQLNonNull(GraphQLString) },
+        duration: { type: new GraphQLNonNull(GraphQLString) },
+        status: {
+          type: new GraphQLEnumType({
+            name: 'CourseStatus',
+            values: {
+              pending: { vale: 'Pending' },
+              approved: { value: 'Approved' },
+              declined: { value: 'Declined' },
+            },
+          }),
+          defaultValue: 'Pending',
+        },
+      },
+      resolve(parent, args) {
+        const course = new Course({
+          name: args.name,
+          description: args.description,
+          duration: args.duration,
+          status: args.status,
+        });
+        return course.save();
+      },
+    },
+
+    // Add Student
+    addStudent: {
+      type: StudentType,
+      args: {
+        firstName: { type: new GraphQLNonNull(GraphQLString) },
+        middleName: { type: new GraphQLNonNull(GraphQLString) },
+        lastName: { type: new GraphQLNonNull(GraphQLString) },
+        gender: {
+          type: new GraphQLEnumType({
+            name: 'GenderStatus',
+            values: {
+              selectGender: { value: 'Select Gender' },
+              male: { value: 'Male' },
+              female: { value: 'Female' },
+            },
+          }),
+          defaultValue: 'Select Gender',
+        },
+        dateOfBirth: { type: new GraphQLNonNull(GraphQLString) },
+        emmergencyContactName: { type: new GraphQLNonNull(GraphQLString) },
+        emmergencyContactRelation: { type: new GraphQLNonNull(GraphQLString) },
+        emmergencyContactPhoneNumber: {
+          type: new GraphQLNonNull(GraphQLString),
+        },
+        street: { type: new GraphQLNonNull(GraphQLString) },
+        city: { type: new GraphQLNonNull(GraphQLString) },
+        zipcode: { type: new GraphQLNonNull(GraphQLString) },
+        state: { type: new GraphQLNonNull(GraphQLString) },
+        country: { type: new GraphQLNonNull(GraphQLString) },
+        email: { type: new GraphQLNonNull(GraphQLString) },
+        password: { type: new GraphQLNonNull(GraphQLString) },
+        phone: { type: new GraphQLNonNull(GraphQLString) },
+        githubUsername: { type: new GraphQLNonNull(GraphQLString) },
+        twitterUsername: { type: new GraphQLNonNull(GraphQLString) },
+        linkedInURL: { type: new GraphQLNonNull(GraphQLString) },
+        courseId: { type: new GraphQLNonNull(GraphQLID) },
+      },
+      resolve(parent, args) {
+        const student = new Student({
+          firstName: args.firstName,
+          middleName: args.middleName,
+          lastName: args.lastName,
+          gender: args.gender,
+          dateOfBirth: args.dateOfBirth,
+          emmergencyContactName: args.emmergencyContactName,
+          emmergencyContactRelation: args.emmergencyContactRelation,
+          emmergencyContactPhoneNumber: args.emmergencyContactPhoneNumber,
+          street: args.street,
+          city: args.city,
+          zipcode: args.zipcode,
+          state: args.state,
+          country: args.country,
+          email: args.email,
+          password: args.password,
+          phone: args.phone,
+          githubUsername: args.githubUsername,
+          twitterUsername: args.twitterUsername,
+          linkedInURL: args.linkedInURL,
+          courseId: args.courseId,
+        });
+        return student.save();
+      },
+    },
+  },
+});
+
+module.exports = new GraphQLSchema({ query: RootQuery, mutation });
