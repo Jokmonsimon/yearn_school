@@ -16,6 +16,10 @@ const InstructorSchema = new mongoose.Schema({
     type: String,
     enum: ['Pending', 'Approved', 'Declined'],
   },
+  courseId: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Course',
+  },
 });
 
 module.exports = mongoose.model('Instructor', InstructorSchema);
