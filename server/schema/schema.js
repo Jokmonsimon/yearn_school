@@ -74,6 +74,12 @@ const InstructorType = new GraphQLObjectType({
     nationality: { type: GraphQLString },
     education: { type: GraphQLString },
     status: { type: GraphQLString },
+    courseId: {
+      type: CourseType,
+      resolve(parent, args) {
+        return Course.findById(parent.courseId);
+      },
+    },
   }),
 });
 
