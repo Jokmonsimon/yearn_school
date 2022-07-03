@@ -4,7 +4,10 @@ const InstructorSchema = new mongoose.Schema({
   firstName: { type: String },
   middleName: { type: String },
   lastName: { type: String },
-  gender: { type: String },
+  gender: {
+    type: String,
+    enum: ['Male', 'Female'],
+  },
   dateOfBirth: { type: String },
   address: { type: String },
   email: { type: String },
