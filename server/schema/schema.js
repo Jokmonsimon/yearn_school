@@ -48,7 +48,7 @@ const ProjectType = new GraphQLObjectType({
     concepts: { type: GraphQLString },
     description: { type: GraphQLString },
     tasks: { type: GraphQLString },
-    instructor: {
+    instructorId: {
       type: InstructorType,
       resolve(parent, args) {
         return Instructor.findById(parent.instructorId);
@@ -224,6 +224,63 @@ const mutation = new GraphQLObjectType({
       },
     },
 
+    // Add Instructor
+    addInstructor: {
+      type: InstructorType,
+      args: {
+        firstName: { type: new GraphQLNonNull(GraphQLString) },
+        middleName: { type: new GraphQLNonNull(GraphQLString) },
+        lastName: { type: new GraphQLNonNull(GraphQLString) },
+        gender: {
+          type: new GraphQLEnumType({
+            name: 'InstructorGenderStatus',
+            values: {
+              male: { value: 'Male' },
+              female: { value: 'Female' },
+            },
+          }),
+          defaultValue: 'Male',
+        },
+        dateOfBirth: { type: new GraphQLNonNull(GraphQLString) },
+        address: { type: new GraphQLNonNull(GraphQLString) },
+        email: { type: new GraphQLNonNull(GraphQLString) },
+        password: { type: new GraphQLNonNull(GraphQLString) },
+        phone: { type: new GraphQLNonNull(GraphQLString) },
+        nationality: { type: new GraphQLNonNull(GraphQLString) },
+        education: { type: new GraphQLNonNull(GraphQLString) },
+        status: {
+          type: new GraphQLEnumType({
+            name: 'InstructorStatus',
+            values: {
+              pending: { value: 'Pending' },
+              approved: { value: 'Aooroved' },
+              declined: { value: 'Declined' },
+            },
+          }),
+          defaultValue: 'Pending',
+        },
+        courseId: { type: new GraphQLNonNull(GraphQLID) },
+      },
+      resolve(parent, args) {
+        const instructor = new Instructor({
+          firstName: args.firstName,
+          middleName: args.middleName,
+          lastName: args.lastName,
+          gender: args.gender,
+          dateOfBirth: args.dateOfBirth,
+          address: args.address,
+          email: args.email,
+          password: args.password,
+          phone: args.phone,
+          nationality: args.nationality,
+          education: args.education,
+          status: args.status,
+          courseId: args.courseId,
+        });
+        return instructor.save();
+      },
+    },
+
     // Add Student
     addStudent: {
       type: StudentType,
@@ -235,12 +292,11 @@ const mutation = new GraphQLObjectType({
           type: new GraphQLEnumType({
             name: 'GenderStatus',
             values: {
-              selectGender: { value: 'Select Gender' },
               male: { value: 'Male' },
               female: { value: 'Female' },
             },
           }),
-          defaultValue: 'Select Gender',
+          defaultValue: 'Male',
         },
         dateOfBirth: { type: new GraphQLNonNull(GraphQLString) },
         emmergencyContactName: { type: new GraphQLNonNull(GraphQLString) },
