@@ -6,7 +6,7 @@ const StudentSchema = new mongoose.Schema({
   lastName: { type: String },
   gender: {
     type: String,
-    enum: ['Select Gender', 'Male', 'Female'],
+    enum: ['Male', 'Female'],
   },
   dateOfBirth: { type: String },
   emmergencyContactName: { type: String },
