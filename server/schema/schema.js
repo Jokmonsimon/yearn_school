@@ -224,6 +224,14 @@ const mutation = new GraphQLObjectType({
       },
     },
 
+    // Add Project
+    addProject: {
+      type: ProjectType,
+      args: {
+        name: { type: new GraphQLNonNull(GraphQLString) },
+      },
+    },
+
     // Add Instructor
     addInstructor: {
       type: InstructorType,
