@@ -229,6 +229,52 @@ const mutation = new GraphQLObjectType({
       type: ProjectType,
       args: {
         name: { type: new GraphQLNonNull(GraphQLString) },
+        subject: { type: new GraphQLNonNull(GraphQLString) },
+        weight: { type: new GraphQLNonNull(GraphQLString) },
+        startDate: { type: new GraphQLNonNull(GraphQLString) },
+        endDate: { type: new GraphQLNonNull(GraphQLString) },
+        status: {
+          type: new GraphQLEnumType({
+            name: 'ProjectStatus',
+            values: {
+              notStarted: { value: 'Project not started' },
+              ongoing: { value: 'Ongoing project' },
+              over: { value: 'Project over' },
+            },
+          }),
+          defaultValue: 'Project not started',
+        },
+        progress: { type: new GraphQLNonNull(GraphQLString) },
+        reviewType: { type: new GraphQLNonNull(GraphQLString) },
+        autoQAReview: { type: new GraphQLNonNull(GraphQLString) },
+        mandatoryScore: { type: new GraphQLNonNull(GraphQLString) },
+        advancedScore: { type: new GraphQLNonNull(GraphQLString) },
+        totalScore: { type: new GraphQLNonNull(GraphQLString) },
+        concepts: { type: new GraphQLNonNull(GraphQLString) },
+        description: { type: new GraphQLNonNull(GraphQLString) },
+        tasks: { type: new GraphQLNonNull(GraphQLString) },
+        instructorId: { type: new GraphQLNonNull(GraphQLID) },
+      },
+      resolve(parent, args) {
+        const project = new Project({
+          name: args.name,
+          subject: args.subject,
+          weight: args.weight,
+          startDate: args.startDate,
+          endDate: args.endDate,
+          status: args.status,
+          progress: args.progress,
+          reviewType: args.reviewType,
+          autoQAReview: args.autoQAReview,
+          mandatoryScore: args.mandatoryScore,
+          advancedScore: args.advancedScore,
+          totalScore: args.totalScore,
+          concepts: args.concepts,
+          description: args.description,
+          tasks: args.tasks,
+          instructorId: args.instructorId,
+        });
+        return project.save();
       },
     },
 
