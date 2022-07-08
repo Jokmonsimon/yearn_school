@@ -223,9 +223,56 @@ const mutation = new GraphQLObjectType({
         return course.save();
       },
     },
+    // Delete Course
+    deletCourse: {
+      type: CourseType,
+      args: {
+        id: { type: GraphQLNonNull(GraphQLID) },
+      },
+      resolve(parent, args) {
+        return Course.findByIdAndRemove(args.id);
+      },
+    },
+    // Update Course
+    updateCourse: {
+      type: CourseType,
+      args: {
+        id: { type: GraphQLNonNull(GraphQLID) },
+        name: { type: GraphQLString },
+        description: { type: GraphQLString },
+        duration: { type: GraphQLString },
+        status: {
+          type: new GraphQLEnumType({
+            name: 'UpdateCourseStatus',
+            values: {
+              pending: { vale: 'Pending' },
+              approved: { value: 'Approved' },
+              declined: { value: 'Declined' },
+            },
+          }),
+        },
+      },
+      resolve(parent, args) {
+        return Course.findByIdAndUpdate(
+          args.id,
+          {
+            $set: {
+              name: args.name,
+              description: args.description,
+              duration: args.duration,
+              status: args.status,
+            },
+          },
+          { new: true }
+        );
+      },
+    },
 
     // Add Project
     addProject: {
+      name: 'Foundation of Software Engineering',
+      description: 'Become a software developer by enroling in this course',
+
       type: ProjectType,
       args: {
         name: { type: new GraphQLNonNull(GraphQLString) },
@@ -275,6 +322,72 @@ const mutation = new GraphQLObjectType({
           instructorId: args.instructorId,
         });
         return project.save();
+      },
+    },
+    // Delete Project
+    deleteProject: {
+      type: ProjectType,
+      args: {
+        id: { type: GraphQLNonNull(GraphQLID) },
+      },
+      resolve(parent, args) {
+        return Project.findByIdAndRemove(args.id);
+      },
+    },
+    // Update Project
+    updateProject: {
+      type: ProjectType,
+      args: {
+        id: { type: GraphQLNonNull(GraphQLID) },
+        name: { type: GraphQLString },
+        subject: { type: GraphQLString },
+        weight: { type: GraphQLString },
+        startDate: { type: GraphQLString },
+        endDate: { type: GraphQLString },
+        status: {
+          type: new GraphQLEnumType({
+            name: 'UpdateProjectStatus',
+            values: {
+              notStarted: { value: 'Project not started' },
+              ongoing: { value: 'Ongoing project' },
+              over: { value: 'Project over' },
+            },
+          }),
+        },
+        progress: { type: GraphQLString },
+        reviewType: { type: GraphQLString },
+        autoQAReview: { type: GraphQLString },
+        mandatoryScore: { type: GraphQLString },
+        advancedScore: { type: GraphQLString },
+        totalScore: { type: GraphQLString },
+        concepts: { type: GraphQLString },
+        description: { type: GraphQLString },
+        tasks: { type: GraphQLString },
+      },
+      resolve(parent, args) {
+        return Project.findByIdAndUpdate(
+          args.id,
+          {
+            $set: {
+              name: args.name,
+              subject: args.subject,
+              weight: args.weight,
+              startDate: args.startDate,
+              endDate: args.endDate,
+              status: args.status,
+              progress: args.progress,
+              reviewType: args.reviewType,
+              autoQAReview: args.autoQAReview,
+              mandatoryScore: args.mandatoryScore,
+              advancedScore: args.advancedScore,
+              totalScore: args.totalScore,
+              concepts: args.concepts,
+              description: args.description,
+              tasks: args.tasks,
+            },
+          },
+          { new: true }
+        );
       },
     },
 
@@ -332,6 +445,74 @@ const mutation = new GraphQLObjectType({
           courseId: args.courseId,
         });
         return instructor.save();
+      },
+    },
+    // Delete Instructor
+    deleteInstructor: {
+      type: InstructorType,
+      args: {
+        id: { type: GraphQLNonNull(GraphQLID) },
+      },
+      resolve(parent, args) {
+        return Instructor.findByIdAndRemove(args.id);
+      },
+    },
+    // Uodate Instructor
+    updateInstructor: {
+      type: InstructorType,
+      args: {
+        id: { type: GraphQLNonNull(GraphQLID) },
+        firstName: { type: GraphQLString },
+        middleName: { type: GraphQLString },
+        lastName: { type: GraphQLString },
+        gender: {
+          type: new GraphQLEnumType({
+            name: 'UpdateInstructorGenderStatus',
+            values: {
+              male: { value: 'Male' },
+              female: { value: 'Female' },
+            },
+          }),
+        },
+        dateOfBirth: { type: GraphQLString },
+        address: { type: GraphQLString },
+        email: { type: GraphQLString },
+        password: { type: GraphQLString },
+        phone: { type: GraphQLString },
+        nationality: { type: GraphQLString },
+        education: { type: GraphQLString },
+        status: {
+          type: new GraphQLEnumType({
+            name: 'UpdateInstructorStatus',
+            values: {
+              pending: { value: 'Pending' },
+              approved: { value: 'Approved' },
+              declined: { value: 'Declined' },
+            },
+          }),
+        },
+      },
+      resolve(parent, args) {
+        return Instructor.findByIdAndUpdate(
+          args.id,
+          {
+            $set: {
+              firstName: args.firstName,
+              middleName: args.middleName,
+              lastName: args.lastName,
+              gender: args.gender,
+              dateOfBirth: args.dateOfBirth,
+              address: args.address,
+              email: args.email,
+              password: args.password,
+              phone: args.phone,
+              nationality: args.nationality,
+              education: args.education,
+              status: args.status,
+            },
+          },
+          { new: true }
+        );
       },
     },
 
@@ -395,6 +576,81 @@ const mutation = new GraphQLObjectType({
           courseId: args.courseId,
         });
         return student.save();
+      },
+    },
+    // Delete Student
+    deleteStudent: {
+      type: StudentType,
+      args: {
+        id: { type: GraphQLNonNull(GraphQLID) },
+      },
+      resolve(parent, args) {
+        return Student.findByIdAndRemove(args.id);
+      },
+    },
+    // Update Student
+    updateStudent: {
+      type: StudentType,
+      args: {
+        id: { type: GraphQLNonNull(GraphQLID) },
+        firstName: { type: GraphQLString },
+        middleName: { type: GraphQLString },
+        lastName: { type: GraphQLString },
+        gender: {
+          type: new GraphQLEnumType({
+            name: 'UpdateGenderStatus',
+            values: {
+              male: { value: 'Male' },
+              female: { value: 'Female' },
+            },
+          }),
+        },
+        dateOfBirth: { type: GraphQLString },
+        emmergencyContactName: { type: GraphQLString },
+        emmergencyContactRelation: { type: GraphQLString },
+        emmergencyContactPhoneNumber: {
+          type: GraphQLString,
+        },
+        street: { type: GraphQLString },
+        city: { type: GraphQLString },
+        zipcode: { type: GraphQLString },
+        state: { type: GraphQLString },
+        country: { type: GraphQLString },
+        email: { type: GraphQLString },
+        password: { type: GraphQLString },
+        phone: { type: GraphQLString },
+        githubUsername: { type: GraphQLString },
+        twitterUsername: { type: GraphQLString },
+        linkedInURL: { type: GraphQLString },
+      },
+      resolve(parent, args) {
+        return Student.findByIdAndUpdate(
+          args.id,
+          {
+            $set: {
+              firstName: args.firstName,
+              middleName: args.middleName,
+              lastName: args.lastName,
+              gender: args.gender,
+              dateOfBirth: args.dateOfBirth,
+              emmergencyContactName: args.emmergencyContactName,
+              emmergencyContactRelation: args.emmergencyContactRelation,
+              emmergencyContactPhoneNumber: args.emmergencyContactPhoneNumber,
+              street: args.street,
+              city: args.city,
+              zipcode: args.zipcode,
+              state: args.state,
+              country: args.country,
+              email: args.email,
+              password: args.password,
+              phone: args.phone,
+              githubUsername: args.githubUsername,
+              twitterUsername: args.twitterUsername,
+              linkedInURL: args.linkedInURL,
+            },
+          },
+          { new: true }
+        );
       },
     },
   },
