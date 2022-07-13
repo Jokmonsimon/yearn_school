@@ -13,3 +13,7 @@ Run `npm i -D nodemon dotenv`
 ## Start the server
 
 In the root directory, run `npm run dev`
+
+## Query Instructors
+
+`{ instructors{ id firstName middleName lastName gender dateOfBirth address email password phone nationality education status courseId{ id name duration description status } } }`
